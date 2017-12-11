@@ -29,7 +29,7 @@ if __name__ == "__main__":
 
     plt.subplot(231)
     plt.plot(dataDahlin0, 'r', label="Dahlin"), plt.plot(R, 'blue', label="H"), plt.plot(dataPID0, 'orange', label="PID")
-    SetPlotDefaultProperty('Y(N)', "Zero Order")
+    SetPlotDefaultProperty('Y(N)', "First Order (No Delay)")
 
     plt.subplot(234)
     plt.plot(dataDahlinU0, 'purple', label="Dahlin Controller Output")
