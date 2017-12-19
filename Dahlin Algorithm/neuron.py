@@ -64,16 +64,16 @@ def _FillDahlinBPInputLayer(R:np.ndarray, Y:np.ndarray, xi:np.ndarray, a0, b0, T
 
 
 def _FillDahlinBPHiddenLayer(X:np.ndarray, V:np.ndarray, yThi:np.ndarray, bhi:np.ndarray, alpha_i:np.ndarray):
-    alpha_i.fill(0.0)
     for k in range(bhi.size):
+        alpha_i[k].fill(0.0)
         for (xi, vi) in zip(X, V[k]):
             alpha_i[k] += xi*vi
         bhi[k] = Sigmoid_F(alpha_i[k] - yThi[k])
 
 
 def _FillDahlinBPOutputLayer(B:np.ndarray, W:np.ndarray, tThi:np.ndarray, yi:np.ndarray, beta_i:np.ndarray):
-    beta_i.fill(0.0)
     for k in range(yi.size):
+        beta_i[k].fill(0.0)
         for (bi, wi) in zip(B, W[k]):
             beta_i[k] += bi*wi
         yi[k] = Sigmoid_G(beta_i[k] - tThi[k])
@@ -121,26 +121,24 @@ def DahlinBP(R:np.ndarray, tPeriod:float, T1:float, T2:float, tLag:float, maximu
     :param maximumStep: 训练集最大步长
     :return:
     """
-
     # 下面的这些暂时都是定值
-    n1 = 0.01       #学习率
-    n2 = 0.005       # 惯性系数
+    n2 = 0.0001      # 惯性系数
     a0 = np.exp(-tPeriod / T1)
     b0 = np.exp(-tPeriod / T2)
     c1 = 1 + 1 / (T2 - T1) * (T1 * a0 - T2 * b0)
     c2 = a0 * b0 + 1 / (T2 - T1) * (T1 * b0 - T2 * a0)
     N = int(tLag / tPeriod)
 
-    szInput, szHidden, szOutput = 14, 4, 2
+    szInput, szHidden, szOutput = 14, 100, 2
     wi = np.zeros((maximumStep, szOutput, szHidden), dtype=np.float64)
     tThi = np.zeros((maximumStep, szOutput), dtype=np.float64)
-    tThi[0].fill(1)
+    tThi[0].fill(0.5)
     vi = np.zeros((maximumStep, szHidden ,szInput), dtype=np.float64)
-    vi[0].fill(1)
-    yThi = np.zeros((maximumStep, szInput), dtype=np.float64)
-    yThi[0].fill(2)
+    vi[0].fill(0.5)
+    yThi = np.zeros((maximumStep, szHidden), dtype=np.float64)
+    yThi[0].fill(0.5)
     nnHiddenVal = np.zeros((maximumStep, szHidden), dtype=np.float64)
-    nnHiddenVal.fill(0.01)
+    nnHiddenVal.fill(0.5)
     alpha_i = np.zeros((maximumStep, szHidden), dtype=np.float64)
     xi = np.zeros(szInput, dtype=np.float64)
     yi = np.zeros((maximumStep, szOutput), dtype=np.float64)
@@ -148,7 +146,8 @@ def DahlinBP(R:np.ndarray, tPeriod:float, T1:float, T2:float, tLag:float, maximu
     sz = R.shape[0]
     assert maximumStep <= sz
     Y = np.zeros(R.shape, dtype=np.float64)
-    yi[0] = (2, 1)
+    yi[0] = (0.21, 0.01)
+    nn = np.array([0.01, 0.05], dtype=np.float64)
 
     for step in range(1, sz):
         Tc = yi[step - 1, 0]
@@ -160,42 +159,44 @@ def DahlinBP(R:np.ndarray, tPeriod:float, T1:float, T2:float, tLag:float, maximu
         _FillDahlinBPOutputLayer(nnHiddenVal[step], wi[step - 1], tThi[step - 1], yi[step], beta_i[step])
 
         # Update Wi and tThi
-        # w_hj = -n1*gj*bh + n2*pre_w_hj   thi_j = +n1*gj + n2*pre_thi_j
+        # w_hj = -n1*gj*bh + n2*pre_w_hj   thi_j = +n1*gj + pre_thi_j
         sTc, sKp = yi[step]
         systemOutVal = Output(R, Y, a0, b0, sTc, sKp, c1, c2, tPeriod, step - 1, N)
         g = np.zeros(szOutput, dtype=np.float64)
         for j in range(szOutput):
-            for k in range(szHidden):
+            for h in range(szHidden):
                 preSystemOutVal = Y[step - 2] if step - 2 >= 0 else 0
-                preNeuronOut = yi[step - 1, j] if step - 1 >= 0 else 0
-                preWi = wi[step - 1, j, k] if step - 1 >= 0 else 0
+                preNeuronOut = yi[step - 2, j] if step - 2 >= 0 else 0
+                preWi = wi[step - 1, j, h] if step - 1 >= 0 else 0
+                preWi2 = wi[step - 2, j, h] if step - 2 >= 0 else 0
                 preTThi = tThi[step - 1, j] if step - 1 >= 0 else 0
+                preTThi2 = tThi[step - 2, j] if step - 2 >= 0 else 0
 
-                g[j] = (systemOutVal - 1)*np.sign(systemOutVal - preSystemOutVal) / np.sign(preNeuronOut - yi[step, j] + 0.0000001) \
-                       + SigmoidDiff_G(beta_i[step, j] - tThi[step - 1, j])
+                g[j] = (1 - systemOutVal)*np.sign((systemOutVal - preSystemOutVal) / (yi[step, j] - preNeuronOut + 0.000001)) \
+                       *SigmoidDiff_G(beta_i[step, j] - tThi[step - 1, j])
 
-                print(f"gi {g[j]}")
-                wi[step, j, k] = n2 * preWi + n1 * g[j] * nnHiddenVal[step, k]
-                print(f"wi {wi[step, j, k]}")
-                tThi[step, j] = n2 * preTThi - n1 * g[j]
-                print(f"tThi {tThi[step, j]}")
+                wi[step, j, h] = preWi + n2*(preWi - preWi2) + nn[j] * g[j] * nnHiddenVal[step, h]
+                tThi[step, j] = preTThi + n2*(preTThi - preTThi2) - nn[j] * g[j]
 
 
         # Update Vi and yThi
-        # y_hj = n2*pre_y_hj - n1*eh*xh   thi_j = -n2*pre_thi_j + n1*eh
+        # y_hj = n2*pre_y_hj - n1*eh*xh   thi_j = pre_thi_j + n1*eh
         e = np.zeros(szHidden, dtype=np.float64)
         for h in range(szHidden):
             for i in range(szInput):
                 preVi = vi[step - 1, h, i] if step - 1 >= 0 else 0
+                preVi2 = vi[step - 2, h, i] if step - 2 >= 0 else 0
                 preYThi = yThi[step - 1, h] if step - 1 >= 0 else 0
+                preYThi2 = yThi[step - 2, h] if step - 2 >= 0 else 0
 
                 s = 0
                 for j in range(szOutput):
-                    s += wi[step, j, h] * g[j]
+                    preWi = wi[step - 1, j, h] if step - 1 >= 0 else 0
+                    s += preWi * g[j]
                 e[h] = SigmoidDiff_F(alpha_i[step, h] - yThi[step - 1, h]) * s
 
-                vi[step, h, i] = n2 *preVi + n1*e[h] * xi[i]
-                yThi[step, h] = n2 * preYThi - n1 * e[h]
+                vi[step, h, i] = preVi + n2*(preVi - preVi2) - 0.01 *e[h] * xi[i]
+                yThi[step, h] = preYThi + n2*(preYThi - preYThi2) + 0.01 *e[h]
 
 
     return yi[maximumStep - 1, 0], yi[maximumStep - 1, 1] , yi, Y

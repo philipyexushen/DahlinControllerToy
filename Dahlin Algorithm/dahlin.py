@@ -65,6 +65,8 @@ if __name__ == "__main__":
     SetPlotDefaultProperty('U(N)')
     '''
     BpTc, BpKp, y, Y = DahlinBP(R, tPeriod, tObject1, tObject2, tLag, R.size)
+    print(BpTc, BpKp)
+
     dataDahlinU2E, dataDahlin2E = DahlinSecondOrderEraseRinging(R, tPeriod, tObject1, tObject2, tLoop, tLag)
     dataDahlinUBP, dataDahlinBP = DahlinSecondOrderEraseRinging(R, tPeriod, tObject1, tObject2, BpTc, tLag, BpKp)
 
@@ -78,7 +80,7 @@ if __name__ == "__main__":
     plt.figure(3)
     plt.plot(y[:, 0], 'r', label="Tc")
     plt.plot(y[:, 1], 'orange', label="Kp")
-    SetPlotDefaultProperty('Value', "Param")
+    SetPlotDefaultProperty('Value', "Parameter")
 
     plt.show()
 
