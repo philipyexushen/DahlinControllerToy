@@ -1,4 +1,10 @@
 # Homework Demo
-+  Fuck you, Automatic Control Theory  
+2017.12.19
+----
++ BP algorithm added  
 
-Philip 2017.12.11
+2017.12.11
+----
++  Normal Dahlin algorithm added
+
+Philip 
