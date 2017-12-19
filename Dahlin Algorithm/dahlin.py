@@ -30,7 +30,6 @@ if __name__ == "__main__":
     BpTc, BpKp, y, Y = DahlinBP(R, tPeriod, tObject1, tObject2, tLag, R.size)
 
     dataDahlinU2E, dataDahlin2E = DahlinSecondOrderEraseRinging(R, tPeriod, tObject1, tObject2, tLoop, tLag)
-    dataDahlinUBP, dataDahlinBP = DahlinSecondOrderEraseRinging(R, tPeriod, tObject1, tObject2, BpTc, tLag, BpKp)
 
     plt.figure(1)
     plt.subplot(121)
@@ -38,7 +37,7 @@ if __name__ == "__main__":
     plt.plot(R, 'blue', label="H")
     plt.plot(dataDahlin2, 'purple', label="Dahlin")
     plt.plot(Y[0:199], 'orange', label="DahlinBP")
-    SetPlotDefaultProperty('Y(N)', "Hello Dahlin")
+    SetPlotDefaultProperty('Y(N)', "Dahlin Phase Step Plot")
 
     plt.subplot(122)
     plt.plot(y[:, 0], 'r', label="Tc")
@@ -59,7 +58,6 @@ if __name__ == "__main__":
     BpTc, BpKp, y, Y = DahlinBP(R2, tPeriod, tObject1, tObject2, tLag, R.size)
 
     dataDahlinU2E, dataDahlin2E = DahlinSecondOrderEraseRinging(R2, tPeriod, tObject1, tObject2, tLoop, tLag)
-    dataDahlinUBP, dataDahlinBP = DahlinSecondOrderEraseRinging(R2, tPeriod, tObject1, tObject2, BpTc, tLag, BpKp)
 
     plt.figure(2)
     plt.subplot(121)
@@ -67,7 +65,7 @@ if __name__ == "__main__":
     plt.plot(R2, 'blue', label="H")
     plt.plot(dataDahlin2, 'purple', label="Dahlin")
     plt.plot(Y[0:199], 'orange', label="DahlinBP")
-    SetPlotDefaultProperty('Y(N)', "Hello Dahlin")
+    SetPlotDefaultProperty('Y(N)', "Dahlin Sine Plot")
 
     plt.subplot(122)
     plt.plot(y[:, 0], 'r', label="Tc")
