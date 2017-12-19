@@ -1,10 +1,10 @@
 from common import *
 
-def Sigmoid_G(x, T = 4):
+def Sigmoid_G(x, T = 2):
     return T / (1 + np.exp(-2*x))
 
 
-def SigmoidDiff_G(x, T = 4):
+def SigmoidDiff_G(x, T = 2):
     return 2 * T * np.exp(-2*x) / (1 + np.exp(-2*x))**2
 
 
@@ -122,23 +122,23 @@ def DahlinBP(R:np.ndarray, tPeriod:float, T1:float, T2:float, tLag:float, maximu
     :return:
     """
     # 下面的这些暂时都是定值
-    n2 = 0.0001      # 惯性系数
+    n2 = 0.01      # 惯性系数
     a0 = np.exp(-tPeriod / T1)
     b0 = np.exp(-tPeriod / T2)
     c1 = 1 + 1 / (T2 - T1) * (T1 * a0 - T2 * b0)
     c2 = a0 * b0 + 1 / (T2 - T1) * (T1 * b0 - T2 * a0)
     N = int(tLag / tPeriod)
 
-    szInput, szHidden, szOutput = 14, 100, 2
+    szInput, szHidden, szOutput = 14, 20, 2
     wi = np.zeros((maximumStep, szOutput, szHidden), dtype=np.float64)
     tThi = np.zeros((maximumStep, szOutput), dtype=np.float64)
-    tThi[0].fill(0.5)
+    tThi[0].fill(0.15)
     vi = np.zeros((maximumStep, szHidden ,szInput), dtype=np.float64)
-    vi[0].fill(0.5)
+    vi[0].fill(0.01)
     yThi = np.zeros((maximumStep, szHidden), dtype=np.float64)
-    yThi[0].fill(0.5)
+    yThi[0].fill(0.3)
     nnHiddenVal = np.zeros((maximumStep, szHidden), dtype=np.float64)
-    nnHiddenVal.fill(0.5)
+    nnHiddenVal.fill(0.21)
     alpha_i = np.zeros((maximumStep, szHidden), dtype=np.float64)
     xi = np.zeros(szInput, dtype=np.float64)
     yi = np.zeros((maximumStep, szOutput), dtype=np.float64)
@@ -147,7 +147,7 @@ def DahlinBP(R:np.ndarray, tPeriod:float, T1:float, T2:float, tLag:float, maximu
     assert maximumStep <= sz
     Y = np.zeros(R.shape, dtype=np.float64)
     yi[0] = (0.21, 0.01)
-    nn = np.array([0.01, 0.05], dtype=np.float64)
+    nn = np.array([0.02, 0.1], dtype=np.float64)
 
     for step in range(1, sz):
         Tc = yi[step - 1, 0]
@@ -172,7 +172,7 @@ def DahlinBP(R:np.ndarray, tPeriod:float, T1:float, T2:float, tLag:float, maximu
                 preTThi = tThi[step - 1, j] if step - 1 >= 0 else 0
                 preTThi2 = tThi[step - 2, j] if step - 2 >= 0 else 0
 
-                g[j] = (1 - systemOutVal)*np.sign((systemOutVal - preSystemOutVal) / (yi[step, j] - preNeuronOut + 0.000001)) \
+                g[j] = (R[step - 1] - systemOutVal)*np.sign((systemOutVal - preSystemOutVal) / np.sign(yi[step, j] - preNeuronOut)) \
                        *SigmoidDiff_G(beta_i[step, j] - tThi[step - 1, j])
 
                 wi[step, j, h] = preWi + n2*(preWi - preWi2) + nn[j] * g[j] * nnHiddenVal[step, h]
@@ -195,9 +195,8 @@ def DahlinBP(R:np.ndarray, tPeriod:float, T1:float, T2:float, tLag:float, maximu
                     s += preWi * g[j]
                 e[h] = SigmoidDiff_F(alpha_i[step, h] - yThi[step - 1, h]) * s
 
-                vi[step, h, i] = preVi + n2*(preVi - preVi2) - 0.01 *e[h] * xi[i]
-                yThi[step, h] = preYThi + n2*(preYThi - preYThi2) + 0.01 *e[h]
-
+                vi[step, h, i] = preVi + n2*(preVi - preVi2) - 0.03 *e[h] * xi[i]
+                yThi[step, h] = preYThi + n2*(preYThi - preYThi2) + 0.03 *e[h]
 
     return yi[maximumStep - 1, 0], yi[maximumStep - 1, 1] , yi, Y
 

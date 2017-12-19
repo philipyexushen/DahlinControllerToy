@@ -18,6 +18,7 @@ if __name__ == "__main__":
     tLoop = 2
     tLag = 3
 
+    # 普通阶跃信号
     R = np.ones(200, dtype=np.float64)
     dataDahlinU0, dataDahlin0 = DahlinZeroOrder(R, tPeriod, tObject1, tLoop)
     dataPID0 = PIDZeroOrder(R, 8, 0.1, 1, tPeriod, tObject1, tLoop)
@@ -25,6 +26,55 @@ if __name__ == "__main__":
     dataPID1 = PIDFirstOrder(R, 8, 0.1, 1, tPeriod, tObject1, tLoop, tLag)
     dataDahlinU2, dataDahlin2 = DahlinSecondOrder(R, tPeriod, tObject1, tObject2, tLoop, tLag)
     dataPID2 = PIDSecondOrder(R, 8, 0.1, 1, tPeriod, tObject1,tObject2, tLoop, tLag)
+
+    BpTc, BpKp, y, Y = DahlinBP(R, tPeriod, tObject1, tObject2, tLag, R.size)
+
+    dataDahlinU2E, dataDahlin2E = DahlinSecondOrderEraseRinging(R, tPeriod, tObject1, tObject2, tLoop, tLag)
+    dataDahlinUBP, dataDahlinBP = DahlinSecondOrderEraseRinging(R, tPeriod, tObject1, tObject2, BpTc, tLag, BpKp)
+
+    plt.figure(1)
+    plt.subplot(121)
+    plt.plot(dataDahlin2E, 'r', label="DahlinErase")
+    plt.plot(R, 'blue', label="H")
+    plt.plot(dataDahlin2, 'purple', label="Dahlin")
+    plt.plot(Y[0:199], 'orange', label="DahlinBP")
+    SetPlotDefaultProperty('Y(N)', "Hello Dahlin")
+
+    plt.subplot(122)
+    plt.plot(y[:, 0], 'r', label="Tc")
+    plt.plot(y[:, 1], 'orange', label="Kp")
+    SetPlotDefaultProperty('Value', "Parameter")
+
+    # 普通正弦信号
+    axis_x = np.linspace(0, 3, num=200)
+    R2 = np.sin(axis_x)
+
+    dataDahlinU0, dataDahlin0 = DahlinZeroOrder(R2, tPeriod, tObject1, tLoop)
+    dataPID0 = PIDZeroOrder(R2, 8, 0.1, 1, tPeriod, tObject1, tLoop)
+    dataDahlinU1, dataDahlin1 = DahlinFirstOrder(R2, tPeriod, tObject1, tLoop, tLag)
+    dataPID1 = PIDFirstOrder(R2, 8, 0.1, 1, tPeriod, tObject1, tLoop, tLag)
+    dataDahlinU2, dataDahlin2 = DahlinSecondOrder(R2, tPeriod, tObject1, tObject2, tLoop, tLag)
+    dataPID2 = PIDSecondOrder(R2, 8, 0.1, 1, tPeriod, tObject1, tObject2, tLoop, tLag)
+
+    BpTc, BpKp, y, Y = DahlinBP(R2, tPeriod, tObject1, tObject2, tLag, R.size)
+
+    dataDahlinU2E, dataDahlin2E = DahlinSecondOrderEraseRinging(R2, tPeriod, tObject1, tObject2, tLoop, tLag)
+    dataDahlinUBP, dataDahlinBP = DahlinSecondOrderEraseRinging(R2, tPeriod, tObject1, tObject2, BpTc, tLag, BpKp)
+
+    plt.figure(2)
+    plt.subplot(121)
+    plt.plot(dataDahlin2E, 'r', label="DahlinErase")
+    plt.plot(R2, 'blue', label="H")
+    plt.plot(dataDahlin2, 'purple', label="Dahlin")
+    plt.plot(Y[0:199], 'orange', label="DahlinBP")
+    SetPlotDefaultProperty('Y(N)', "Hello Dahlin")
+
+    plt.subplot(122)
+    plt.plot(y[:, 0], 'r', label="Tc")
+    plt.plot(y[:, 1], 'orange', label="Kp")
+    SetPlotDefaultProperty('Value', "Parameter")
+
+    plt.show()
 
     '''
     plt.figure(1)
@@ -63,26 +113,11 @@ if __name__ == "__main__":
     plt.subplot(122)
     plt.plot(dataDahlinU2E, 'purple', label="Dahlin Controller Output")
     SetPlotDefaultProperty('U(N)')
-    '''
-    BpTc, BpKp, y, Y = DahlinBP(R, tPeriod, tObject1, tObject2, tLag, R.size)
-    print(BpTc, BpKp)
-
-    dataDahlinU2E, dataDahlin2E = DahlinSecondOrderEraseRinging(R, tPeriod, tObject1, tObject2, tLoop, tLag)
-    dataDahlinUBP, dataDahlinBP = DahlinSecondOrderEraseRinging(R, tPeriod, tObject1, tObject2, BpTc, tLag, BpKp)
-
-    plt.figure(2)
-    plt.plot(dataDahlin2E, 'r', label="DahlinErase")
-    plt.plot(R, 'blue', label="H")
-    plt.plot(dataDahlin2, 'purple', label="Dahlin")
-    plt.plot(Y[0:199], 'orange', label="Y")
-    SetPlotDefaultProperty('Y(N)', "Hello Dahlin")
-
-    plt.figure(3)
-    plt.plot(y[:, 0], 'r', label="Tc")
-    plt.plot(y[:, 1], 'orange', label="Kp")
-    SetPlotDefaultProperty('Value', "Parameter")
-
+    
     plt.show()
+    '''
+
+
 
 
 
