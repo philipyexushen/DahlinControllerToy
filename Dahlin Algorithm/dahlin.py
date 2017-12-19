@@ -45,7 +45,7 @@ if __name__ == "__main__":
     SetPlotDefaultProperty('Value', "Parameter")
 
     # 普通正弦信号
-    axis_x = np.linspace(0, 3, num=200)
+    axis_x = np.linspace(0, 20, num=200)
     R2 = np.sin(axis_x)
 
     dataDahlinU0, dataDahlin0 = DahlinZeroOrder(R2, tPeriod, tObject1, tLoop)
