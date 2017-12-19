@@ -1,6 +1,4 @@
-import numpy as np
 from common import *
-
 
 @MethodInformProvider
 def DahlinZeroOrder(R:np.ndarray, tPeriod:float, tObject:float, tLoop:float, Kp:float = 1.0)->(np.ndarray, np.ndarray):

@@ -1,3 +1,6 @@
+import numpy as np
+from numba import jit
+
 def MethodInformProvider(method):
     def __decorator(*args, **kwargs):
         import time

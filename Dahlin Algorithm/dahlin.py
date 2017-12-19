@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.figure import *
 from algorithm import *
+from neuron import *
 import numpy as np
 
 def SetPlotDefaultProperty(yLabel:str, strTitle:str = None):
@@ -15,7 +16,7 @@ if __name__ == "__main__":
     tObject1 = 4
     tObject2 = 6
     tLoop = 2
-    tLag = 4
+    tLag = 3
 
     R = np.ones(200, dtype=np.float64)
     dataDahlinU0, dataDahlin0 = DahlinZeroOrder(R, tPeriod, tObject1, tLoop)
@@ -25,6 +26,7 @@ if __name__ == "__main__":
     dataDahlinU2, dataDahlin2 = DahlinSecondOrder(R, tPeriod, tObject1, tObject2, tLoop, tLag)
     dataPID2 = PIDSecondOrder(R, 8, 0.1, 1, tPeriod, tObject1,tObject2, tLoop, tLag)
 
+    '''
     plt.figure(1)
 
     plt.subplot(231)
@@ -61,6 +63,22 @@ if __name__ == "__main__":
     plt.subplot(122)
     plt.plot(dataDahlinU2E, 'purple', label="Dahlin Controller Output")
     SetPlotDefaultProperty('U(N)')
+    '''
+    BpTc, BpKp, y, Y = DahlinBP(R, tPeriod, tObject1, tObject2, tLag, R.size)
+    dataDahlinU2E, dataDahlin2E = DahlinSecondOrderEraseRinging(R, tPeriod, tObject1, tObject2, tLoop, tLag)
+    dataDahlinUBP, dataDahlinBP = DahlinSecondOrderEraseRinging(R, tPeriod, tObject1, tObject2, BpTc, tLag, BpKp)
+
+    plt.figure(2)
+    plt.plot(dataDahlin2E, 'r', label="DahlinErase")
+    plt.plot(R, 'blue', label="H")
+    plt.plot(dataDahlin2, 'purple', label="Dahlin")
+    plt.plot(Y[0:199], 'orange', label="Y")
+    SetPlotDefaultProperty('Y(N)', "Hello Dahlin")
+
+    plt.figure(3)
+    plt.plot(y[:, 0], 'r', label="Tc")
+    plt.plot(y[:, 1], 'orange', label="Kp")
+    SetPlotDefaultProperty('Value', "Param")
 
     plt.show()
 
