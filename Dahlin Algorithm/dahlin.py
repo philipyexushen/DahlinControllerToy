@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     # 普通阶跃信号
     R = np.ones(200, dtype=np.float64)
-    for i in range(200):
+    for i in range(100):
         R0 = np.zeros(200, dtype=np.float64)
         R = np.append(R, R0)
         R0 = np.ones(200, dtype=np.float64)
@@ -37,29 +37,42 @@ if __name__ == "__main__":
     dataDahlinU2E, dataDahlin2E = DahlinSecondOrderEraseRinging(R, tPeriod, tObject1, tObject2, tLoop, tLag)
 
     plt.figure(1)
-    plt.subplot(131)
+    plt.subplot(231)
     plt.plot(dataDahlin2E, 'r', label="DahlinErase")
     plt.plot(R, 'blue', label="H")
     plt.plot(Y[0:R.size - 1], 'orange', label="DahlinBP")
     plt.plot(dataDahlin2, 'purple', label="Dahlin")
     SetPlotDefaultProperty('Y(N)', "Dahlin Phase Step Plot")
 
-    plt.subplot(132)
+    plt.subplot(232)
+    plt.plot(dataDahlin2E[400*2:400*3], 'r', label="DahlinErase")
+    plt.plot(R[400*2:400*3], 'blue', label="H")
+    plt.plot(Y[400*2:400*3], 'orange', label="DahlinBP")
+    plt.plot(dataDahlin2[400*2:400*3], 'purple', label="Dahlin")
+    SetPlotDefaultProperty('Y(N)', f"Dahlin Phase Step Plot [First {400*1} - {400*2} NT]")
+
+    plt.subplot(233)
+    plt.plot(dataDahlin2E[400*5:400*6], 'r', label="DahlinErase")
+    plt.plot(R[400*5:400*6], 'blue', label="H")
+    plt.plot(Y[400*5:400*6], 'orange', label="DahlinBP")
+    plt.plot(dataDahlin2[400*5:400*6], 'purple', label="Dahlin")
+    SetPlotDefaultProperty('Y(N)', f"Dahlin Phase Step Plot [First {400*5} - {400*6} NT]")
+
+    plt.subplot(234)
     plt.plot(dataDahlin2E[R.size -400:], 'r', label="DahlinErase")
     plt.plot(R[R.size - 400:], 'blue', label="H")
     plt.plot(Y[R.size - 400:R.size - 1], 'orange', label="DahlinBP")
     plt.plot(dataDahlin2[R.size - 400:], 'purple', label="Dahlin")
-    SetPlotDefaultProperty('Y(N)', "Dahlin Phase Step Plot [last 400 nt]")
+    SetPlotDefaultProperty('Y(N)', "Dahlin Phase Step Plot [Last 400 NT]")
 
-    plt.subplot(133)
+    plt.subplot(235)
     plt.plot(y[:, 0], 'r', label="Tc")
     plt.plot(y[:, 1], 'orange', label="Kp")
-    plt.plot(y[:, 2], 'blue', label="TOut")
+    plt.plot(y[:, 2], 'purple', label="T")
     SetPlotDefaultProperty('Value', "Parameter")
-
     '''
     # 普通正弦信号
-    axis_x = np.linspace(0, 20, num=1000)
+    axis_x = np.linspace(0, 60, num=2000)
     R2 = np.sin(axis_x)
 
     dataDahlinU0, dataDahlin0 = DahlinZeroOrder(R2, tPeriod, tObject1, tLoop)
@@ -84,7 +97,6 @@ if __name__ == "__main__":
     plt.subplot(122)
     plt.plot(y[:, 0], 'r', label="Tc")
     plt.plot(y[:, 1], 'orange', label="Kp")
-    plt.plot(y[:, 2], 'blue', label="TOut")
     SetPlotDefaultProperty('Value', "Parameter")
     '''
 

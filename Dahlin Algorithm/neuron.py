@@ -128,7 +128,7 @@ def DahlinBPInner(sz, yi, R, Y, xi, a0, b0, c1,c2,tPeriod, N, vi,yThi,nnHiddenVa
         # forward
         _FillDahlinBPInputLayer(R, Y, xi, a0, b0, Tc, Kp, c1, c2, tPeriod, step - 1, N)
         _FillDahlinBPHiddenLayer(xi, vi[step - 1], yThi[step - 1], nnHiddenVal[step], alpha_i[step])
-        _FillDahlinBPOutputLayer(nnHiddenVal[step], wi[step - 1], tThi[step - 1], yi[step], beta_i[step],  _GT)
+        _FillDahlinBPOutputLayer(nnHiddenVal[step], wi[step - 1], tThi[step - 1], yi[step], beta_i[step],  TOutput)
 
         # Update Wi and tThi
         # w_hj = -n1*gj*bh + n2*pre_w_hj   thi_j = +n1*gj + pre_thi_j
@@ -152,7 +152,7 @@ def DahlinBPInner(sz, yi, R, Y, xi, a0, b0, c1,c2,tPeriod, N, vi,yThi,nnHiddenVa
 
                 if not j == 2:
                     g[j] = (R[step - 1] - systemOutVal) *np.sign(systemOutVal - preSystemOutVal) * divv \
-                           *SigmoidDiff_G(beta_i[step, j] - tThi[step - 1, j], _GT)
+                           *SigmoidDiff_G(beta_i[step, j] - tThi[step - 1, j], TOutput)
                 else:
                     g[j] = (R[step - 1] - systemOutVal) *np.sign(systemOutVal - preSystemOutVal) * divv \
                            *SigmoidDiff_G(beta_i[step, j] - tThi[step - 1, j], _GT)
@@ -212,29 +212,21 @@ def DahlinBP(R:np.ndarray, tPeriod:float, T1:float, T2:float, tLag:float, maximu
     szInput, szHidden, szOutput = 14, 8, 3
     wi = np.zeros((maximumStep, szOutput, szHidden), dtype=np.float64)
     wi[0].fill(0.5)
-
     tThi = np.zeros((maximumStep, szOutput), dtype=np.float64)
     tThi[0].fill(0.04)
-
     vi = np.zeros((maximumStep, szHidden ,szInput), dtype=np.float64)
     vi[0].fill(0.05)
-
     yThi = np.zeros((maximumStep, szHidden), dtype=np.float64)
     yThi[0].fill(0.05)
-
     nnHiddenVal = np.zeros((maximumStep, szHidden), dtype=np.float64)
     nnHiddenVal.fill(0.21)
-
     alpha_i = np.zeros((maximumStep, szHidden), dtype=np.float64)
-
     xi = np.zeros(szInput, dtype=np.float64)
     yi = np.zeros((maximumStep, szOutput), dtype=np.float64)
-
     beta_i = np.zeros((maximumStep, szOutput), dtype=np.float64)
     Y = np.zeros(R.shape, dtype=np.float64)
-
-    yi[maximumStep - 1] = (2, 2, 3)
-    nn = np.array([0.1, 0.3, 0.05], dtype=np.float64)
+    yi[maximumStep - 1] = (2, 2, 2)
+    nn = np.array([6, 0.3, 0.01], dtype=np.float64)
 
     for i in range(1):
         yi[0] = yi[maximumStep - 1]
