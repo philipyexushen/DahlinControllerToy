@@ -147,8 +147,8 @@ def DahlinBPInner(sz, yi, R, Y, xi, a0, b0, c1,c2,tPeriod, N, vi,yThi,nnHiddenVa
                 divv = np.sign(yi[step, j] - preNeuronOut)
                 divv = divv if not divv == 0 else 1
 
-                # print(f"beta_i = {beta_i[step, j]}")
-                # print(f"tThi = {tThi[step, j]}")
+                #print(f"beta_i = {beta_i[step, j]}")
+                #print(f"tThi = {tThi[step, j]}")
 
                 if not j == 2:
                     g[j] = (R[step - 1] - systemOutVal) *np.sign(systemOutVal - preSystemOutVal) * divv \
@@ -161,6 +161,8 @@ def DahlinBPInner(sz, yi, R, Y, xi, a0, b0, c1,c2,tPeriod, N, vi,yThi,nnHiddenVa
                 # print(f"SigmoidDiff_G = {SigmoidDiff_G(beta_i[step, j] - tThi[step - 1, j], sTOutput)}")
                 # print(f"gi = {g[j]}")
                 wi[step, j, h] = preWi + n2*(preWi - preWi2) + nn[j] * g[j] * nnHiddenVal[step, h]
+                #print(f"nnH = {nnHiddenVal[step, h]}")
+                #print(f"wi = {wi[step, j, h]}")
                 tThi[step, j] = preTThi + n2*(preTThi - preTThi2) - nn[j] * g[j]
 
 
@@ -209,10 +211,10 @@ def DahlinBP(R:np.ndarray, tPeriod:float, T1:float, T2:float, tLag:float, maximu
 
     szInput, szHidden, szOutput = 14, 8, 3
     wi = np.zeros((maximumStep, szOutput, szHidden), dtype=np.float64)
-    wi[0].fill(1)
+    wi[0].fill(0.5)
 
     tThi = np.zeros((maximumStep, szOutput), dtype=np.float64)
-    tThi[0].fill(0.4)
+    tThi[0].fill(0.04)
 
     vi = np.zeros((maximumStep, szHidden ,szInput), dtype=np.float64)
     vi[0].fill(0.05)
@@ -232,7 +234,7 @@ def DahlinBP(R:np.ndarray, tPeriod:float, T1:float, T2:float, tLag:float, maximu
     Y = np.zeros(R.shape, dtype=np.float64)
 
     yi[maximumStep - 1] = (2, 2, 3)
-    nn = np.array([0.1, 0.3, 0.5], dtype=np.float64)
+    nn = np.array([0.1, 0.3, 0.05], dtype=np.float64)
 
     for i in range(1):
         yi[0] = yi[maximumStep - 1]

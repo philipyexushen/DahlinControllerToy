@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d5bc7c21-740e-4c9b-816b-a680c6aa64df" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/Philip.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/Philip.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/dahlin.py" afterPath="$PROJECT_DIR$/dahlin.py" />
       <change beforePath="$PROJECT_DIR$/neuron.py" afterPath="$PROJECT_DIR$/neuron.py" />
     </list>
@@ -16,11 +14,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file leaf-file-name="dahlin.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="dahlin.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/dahlin.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="16" column="16" lean-forward="true" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
+            <state relative-caret-position="378">
+              <caret line="54" column="31" lean-forward="true" selection-start-line="54" selection-start-column="31" selection-end-line="54" selection-end-column="31" />
               <folding>
                 <element signature="e#24#55#0" expanded="true" />
               </folding>
@@ -28,11 +26,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="neuron.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="neuron.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/neuron.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1173">
-              <caret line="234" column="31" lean-forward="false" selection-start-line="234" selection-start-column="31" selection-end-line="234" selection-end-column="31" />
+            <state relative-caret-position="147">
+              <caret line="238" column="22" lean-forward="true" selection-start-line="238" selection-start-column="22" selection-end-line="238" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -86,8 +84,8 @@
         <option value="$PROJECT_DIR$/systemFeaturePlot.py" />
         <option value="$PROJECT_DIR$/algorithm.py" />
         <option value="$PROJECT_DIR$/common.py" />
-        <option value="$PROJECT_DIR$/dahlin.py" />
         <option value="$PROJECT_DIR$/neuron.py" />
+        <option value="$PROJECT_DIR$/dahlin.py" />
       </list>
     </option>
   </component>
@@ -278,7 +276,7 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="103" />
+      <option name="time" value="105" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="PythonConfigurationType">
@@ -563,21 +561,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/dahlin.py">
+    <entry file="file://$PROJECT_DIR$/neuron.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="16" column="16" lean-forward="true" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
-          <folding>
-            <element signature="e#24#55#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="147">
+          <caret line="238" column="22" lean-forward="true" selection-start-line="238" selection-start-column="22" selection-end-line="238" selection-end-column="22" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/neuron.py">
+    <entry file="file://$PROJECT_DIR$/dahlin.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1173">
-          <caret line="234" column="31" lean-forward="false" selection-start-line="234" selection-start-column="31" selection-end-line="234" selection-end-column="31" />
-          <folding />
+        <state relative-caret-position="378">
+          <caret line="54" column="31" lean-forward="true" selection-start-line="54" selection-start-column="31" selection-end-line="54" selection-end-column="31" />
+          <folding>
+            <element signature="e#24#55#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     # 普通阶跃信号
     R = np.ones(200, dtype=np.float64)
-    for i in range(400):
+    for i in range(200):
         R0 = np.zeros(200, dtype=np.float64)
         R = np.append(R, R0)
         R0 = np.ones(200, dtype=np.float64)
@@ -37,15 +37,21 @@ if __name__ == "__main__":
     dataDahlinU2E, dataDahlin2E = DahlinSecondOrderEraseRinging(R, tPeriod, tObject1, tObject2, tLoop, tLag)
 
     plt.figure(1)
-    plt.subplot(121)
+    plt.subplot(131)
     plt.plot(dataDahlin2E, 'r', label="DahlinErase")
     plt.plot(R, 'blue', label="H")
     plt.plot(Y[0:R.size - 1], 'orange', label="DahlinBP")
     plt.plot(dataDahlin2, 'purple', label="Dahlin")
-
     SetPlotDefaultProperty('Y(N)', "Dahlin Phase Step Plot")
 
-    plt.subplot(122)
+    plt.subplot(132)
+    plt.plot(dataDahlin2E[R.size -400:], 'r', label="DahlinErase")
+    plt.plot(R[R.size - 400:], 'blue', label="H")
+    plt.plot(Y[R.size - 400:R.size - 1], 'orange', label="DahlinBP")
+    plt.plot(dataDahlin2[R.size - 400:], 'purple', label="Dahlin")
+    SetPlotDefaultProperty('Y(N)', "Dahlin Phase Step Plot [last 400 nt]")
+
+    plt.subplot(133)
     plt.plot(y[:, 0], 'r', label="Tc")
     plt.plot(y[:, 1], 'orange', label="Kp")
     plt.plot(y[:, 2], 'blue', label="TOut")
@@ -81,7 +87,6 @@ if __name__ == "__main__":
     plt.plot(y[:, 2], 'blue', label="TOut")
     SetPlotDefaultProperty('Value', "Parameter")
     '''
-
 
     plt.show()
 
